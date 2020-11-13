@@ -2,13 +2,13 @@ import {save, teamexist} from "./db";
 import {deleteClub} from "./model";
 
 const ligaid = 2001;
-
+const apikey = '34bd7bd813d441578a703b522b305500';
 export function getTeams() {
     let urlParams = new URLSearchParams("?" + window.location.hash.split("?")[1]);
     let idParam = urlParams.get("id");
     // console.log("?"+window.location.hash.split("?")[1])
     fetch('https://api.football-data.org/v2/teams/' + idParam, {
-        headers: {'X-Auth-Token': '34bd7bd813d441578a703b522b305500'}
+        headers: {'X-Auth-Token': apikey}
     })
         .then(function (response) {
             if (response.status !== 200) {
@@ -59,10 +59,12 @@ export function getTeams() {
                 teamexist(idParam).then(function (res) {
                         // console.log(res)
                         if (res) {
-                            alert('Tim sudah ada di favorit tim kamu!')
+                            // alert('Tim sudah ada di favorit tim kamu!')
+                            M.toast({html: 'Tim sudah ada di favorit tim kamu!'})
                         } else {
                             save(idParam,data).then(function () {
-                                alert('Tim berhasil ditambahkan ke favorit anda!')
+                                // alert('Tim berhasil ditambahkan ke favorit anda!')
+                                M.toast({html: 'Tim berhasil ditambahkan ke favorit anda!'})
                                 document.getElementById('button_delete').style.display = "block";
                                 document.getElementById('button_fav').style.display = "none";
                             }).catch(function () {
@@ -78,7 +80,8 @@ export function getTeams() {
             document.getElementById('buttondelete').onclick = function (){
                 deleteClub(idParam).then(function (res){
                     if (res){
-                        alert('Club Berhasil dihapus dari daftar favorit anda')
+                        // alert('Club Berhasil dihapus dari daftar favorit anda')
+                        M.toast({html: 'Club Berhasil dihapus dari daftar favorit anda'})
                         document.getElementById('button_delete').style.display = "none";
                         document.getElementById('button_fav').style.display = "block";
                     }
@@ -98,7 +101,7 @@ export function getTeams() {
 
 export function getAllTeams() {
     fetch('https://api.football-data.org/v2/competitions/' + ligaid + '/teams', {
-        headers: {'X-Auth-Token': '34bd7bd813d441578a703b522b305500'}
+        headers: {'X-Auth-Token': apikey}
     })
         .then(function (response) {
             if (response.status !== 200) {

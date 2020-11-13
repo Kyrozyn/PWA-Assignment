@@ -12,9 +12,9 @@ export function saveClub(){
         name: name,
     }
     save(data).then(function (){
-        alert('Club ' + name + ' Berhasil ditambahkan ke favorit anda!')
+        // alert('Club ' + name + ' Berhasil ditambahkan ke favorit anda!')
     }).catch(function (){
-        alert('Club gagal disimpan menjadi favorit');
+        // alert('Club gagal disimpan menjadi favorit');
     })
 }
 
