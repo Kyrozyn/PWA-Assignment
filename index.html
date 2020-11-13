@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Sepak Terjang Bola Champions League</title>
+    <meta name="description" content="Aplication for searching Impatiens"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">-->
+<!--    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">-->
+<!--    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">-->
+<!--    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">-->
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+<!-- Navigasi -->
+<nav class="blue-grey darken-4" role="navigation">
+    <div class="nav-wrapper container">
+        <a href="#" class="brand-logo" id="logo-container">Champions</a>
+        <a href="#" class="sidenav-trigger" data-target="nav-mobile">☰</a>
+        <ul class="topnav right hide-on-med-and-down"></ul>
+        <ul class="sidenav" id="nav-mobile"></ul>
+    </div>
+</nav>
+<!-- Akhir Navigasi -->
+<div class="container" id="body-content"></div>
+<script src="dist/bundle.js"></script>
+<script>
+    // REGISTER SERVICE WORKER
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+            navigator.serviceWorker
+                .register("service-worker.js")
+                .then(function () {
+                    console.log("Pendaftaran ServiceWorker berhasil");
+                })
+                .catch(function () {
+                    console.log("Pendaftaran ServiceWorker gagal");
+                });
+        });
+    } else {
+        console.log("ServiceWorker belum didukung browser ini.");
+    }
+
+    //fitur Notification API
+    if ("Notification" in window) {
+        requestPermission();
+    } else {
+        console.error("Browser tidak mendukung notifikasi.");
+    }
+
+    // Meminta ijin menggunakan Notification API
+    function requestPermission() {
+        Notification.requestPermission().then(function (result) {
+            if (result === "denied") {
+                console.log("Fitur notifikasi tidak diijinkan.");
+                return;
+            } else if (result === "default") {
+                console.error("Pengguna menutup kotak dialog permintaan ijin.");
+                return;
+            }
+
+            console.log("Fitur notifikasi diijinkan.");
+        });
+    }
+    if (('PushManager' in window)) {
+        navigator.serviceWorker.getRegistration().then(function(registration) {
+            registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array("BF5RnauVwSHQgAkuk0s-m3_J57RZUrXXBPWh14fPqAdbOM1wj1J8qqU1CJINjdG1mClgHamGYia_oCfvIwp-k5E")
+        }).then(function(subscribe) {
+                console.log('Berhasil melakukan subscribe dengan endpoint: ', subscribe.endpoint);
+                console.log('Berhasil melakukan subscribe dengan p256dh key: ', btoa(String.fromCharCode.apply(
+                    null, new Uint8Array(subscribe.getKey('p256dh')))));
+                console.log('Berhasil melakukan subscribe dengan auth key: ', btoa(String.fromCharCode.apply(
+                    null, new Uint8Array(subscribe.getKey('auth')))));
+            }).catch(function(e) {
+                console.error('Tidak dapat melakukan subscribe ', e.message);
+            });
+        });
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/-/g, '+')
+            .replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+</script>
+</body>
+</html>

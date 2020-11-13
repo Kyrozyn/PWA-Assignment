@@ -1,0 +1,44 @@
+const path = require("path");
+
+module.exports = {
+    entry: "./src/js/index.js",
+    output: {
+        path: path.resolve(__dirname, "dist"),
+        filename: "bundle.js",
+        publicPath: '/dist/'
+    },
+    devtool: 'inline-source-map',
+    devServer: {
+        contentBase: './',
+    },
+    mode: "development",
+    module: {
+        rules: [
+            /* style and css loader */
+            {
+                test: /\.css$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader"
+                    }
+                ]
+            },
+            /* babel loader */
+            {
+                test: /\.js$/,
+                exclude: "/node_modules/",
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: {
+                            presets: ["@babel/preset-env"]
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+}
